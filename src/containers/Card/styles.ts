@@ -26,6 +26,7 @@ export const Tag = styled.span`
   padding: 6px 4px;
   background-color: ${cores.vermelho};
   margin-left: 8px;
+  text-transform: capitalize;
 `;
 
 export const TagDiv = styled.div`

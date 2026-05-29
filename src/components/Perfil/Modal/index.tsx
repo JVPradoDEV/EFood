@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { AddCart, Close, ModalBG, ModalDiv } from "./styles";
-import type { Prato } from "../../../models/Prato";
 import { add } from "../../../store/reducers/cartSlice";
+import type { Prato } from "../../../pages/Home";
 
 type ModalProps = {
   prato: Prato;
@@ -9,29 +10,41 @@ type ModalProps = {
 };
 
 export function Modal({ prato, fecharModal }: ModalProps) {
+  const [isClosing, setIsClosing] = useState(false);
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
     dispatch(add(prato));
-    fecharModal();
+    setIsClosing(true);
+
+    setTimeout(() => {
+      fecharModal();
+    }, 500);
+  };
+  const handleCloseWithAnimation = () => {
+    setIsClosing(true);
+
+    setTimeout(() => {
+      fecharModal();
+    }, 500);
   };
 
   return (
     <>
-      <ModalBG>
-        <ModalDiv>
-          <Close className="close-btn" onClick={fecharModal}>
+      <ModalBG $isClosing={isClosing}>
+        <ModalDiv $isClosing={isClosing} onClick={(e) => e.stopPropagation()}>
+          <Close className="close-btn" onClick={handleCloseWithAnimation}>
             X
           </Close>
-          <img src={prato.image} />
+          <img src={prato.foto} />
           <div>
-            <h2>{prato.name}</h2>
-            <p>{prato.descriptionPlus}</p>
-            <p>Serve: de 2 a 3 pessoas</p>
+            <h2>{prato.nome}</h2>
+            <p>{prato.descricao}</p>
+            <p>Serve: de {prato.porcao} pessoa(s)</p>
 
             <AddCart type="button" onClick={handleAddToCart}>
               Adicionar ao Carrinho - R${" "}
-              {prato.price.toFixed(2).replace(".", ",")}
+              {prato.preco.toFixed(2).replace(".", ",")}
             </AddCart>
           </div>
         </ModalDiv>

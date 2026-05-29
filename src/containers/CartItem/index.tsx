@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { remove } from "../../store/reducers/cartSlice";
-import type { Prato } from "../../models/Prato";
+import type { Prato } from "../../pages/Home";
 import lixeira from "../../assets/lixeira-de-reciclagem.png";
 import { CartLi, DelBtn } from "./styles";
 
@@ -14,10 +14,10 @@ export function CartItem({ prato }: CartProps) {
   return (
     <>
       <CartLi>
-        <img src={prato.image} />
+        <img src={prato.foto} />
         <div>
-          <h2>{prato.name}</h2>
-          <p>R$ {prato.price.toFixed(2).replace(".", ",")}</p>
+          <h2>{prato.nome}</h2>
+          <p>R$ {prato.preco.toFixed(2).replace(".", ",")}</p>
         </div>
         <DelBtn onClick={() => dispatch(remove(prato.id))}>
           <img src={lixeira} />

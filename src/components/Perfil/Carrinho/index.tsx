@@ -16,6 +16,7 @@ import { Entrega } from "./Entrega";
 export function Carrinho() {
   const dispatch = useDispatch();
   const [deliveryForm, setDeliveryForm] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   const itemsOnCart = useSelector((state: RootState) => state.cart.items);
   const isOpen = useSelector((state: RootState) => state.cart.isOpen);
@@ -23,12 +24,17 @@ export function Carrinho() {
   if (!isOpen) return null;
 
   const totalValue = itemsOnCart.reduce((acumulador, itemAtual) => {
-    return acumulador + itemAtual.price;
+    return acumulador + itemAtual.preco;
   }, 0);
 
   const closeCart = () => {
-    setDeliveryForm(false);
-    dispatch(close());
+    setIsClosing(true);
+
+    setTimeout(() => {
+      setDeliveryForm(false);
+      dispatch(close());
+      setIsClosing(false);
+    }, 400);
   };
 
   const handleContinuarEntrega = () => {
@@ -41,8 +47,8 @@ export function Carrinho() {
 
   return (
     <>
-      <CartBG onClick={closeCart}>
-        <CartDiv onClick={(e) => e.stopPropagation()}>
+      <CartBG onClick={closeCart} $isClosing={isClosing}>
+        <CartDiv onClick={(e) => e.stopPropagation()} $isClosing={isClosing}>
           {!deliveryForm ? (
             <>
               <CartUl>

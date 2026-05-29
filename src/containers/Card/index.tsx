@@ -11,23 +11,32 @@ import {
 } from "./styles";
 
 type Props = {
+  id: number;
   type: string;
   description: string;
-  infos: string[];
   image: string;
   title: string;
   rating: number;
+  top: boolean;
 };
 
-const Card = ({ image, infos, title, rating, description, type }: Props) => (
-  <>
+const Card = ({ image, title, rating, description, type, id, top }: Props) => {
+  const getDescricao = () => {
+    if (description && description.length > 150) {
+      return description.slice(0) + " . .";
+    }
+    return description;
+  };
+
+  const estaComDestaque = top === true;
+
+  return (
     <CardBody>
       <ImgDiv>
         <img src={image} alt={type} />
         <TagDiv>
-          {infos.map((info) => (
-            <Tag key={info}>{info}</Tag>
-          ))}
+          <Tag key={type}>{type}</Tag>
+          {estaComDestaque && <Tag>Destaque da Semana</Tag>}
         </TagDiv>
       </ImgDiv>
       <InfoContainer>
@@ -38,13 +47,13 @@ const Card = ({ image, infos, title, rating, description, type }: Props) => (
             <img src={star} />
           </span>
         </TitleDiv>
-        <p>{description}</p>
-        <MoreButton to={`/perfil/${type.toLowerCase()}`} type="button">
+        <p>{getDescricao()}</p>
+        <MoreButton to={`/perfil/${id}`} type="button">
           Saiba mais
         </MoreButton>
       </InfoContainer>
     </CardBody>
-  </>
-);
+  );
+};
 
 export default Card;

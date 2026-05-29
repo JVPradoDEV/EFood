@@ -1,20 +1,39 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { cores } from "../../../styles/cores";
+import {
+  fadeIn,
+  fadeOut,
+  fadeSlideIn,
+  fadeSlideOut,
+} from "../../../styles/animations";
 
-export const ModalBG = styled.div`
+type AnimationProps = {
+  $isClosing: boolean;
+};
+
+export const ModalBG = styled.div<AnimationProps>`
   background-color: rgba(0, 0, 0, 0.8);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+
+  animation: ${(props) =>
+    props.$isClosing
+      ? css`
+          ${fadeOut} 0.9s ease forwards
+        `
+      : css`
+          ${fadeIn} 0.4s ease forwards
+        `};
 `;
 
-export const ModalDiv = styled.div`
+export const ModalDiv = styled.div<AnimationProps>`
   background-color: ${cores.vermelho};
   padding: 32px;
   max-width: 1024px;
@@ -22,6 +41,15 @@ export const ModalDiv = styled.div`
 
   display: flex;
   gap: 24px;
+
+  animation: ${(props) =>
+    props.$isClosing
+      ? css`
+          ${fadeSlideOut} 0.4s ease-in forwards
+        `
+      : css`
+          ${fadeSlideIn} 0.4s ease-out forwards
+        `};
 
   p {
     color: ${cores.branco};

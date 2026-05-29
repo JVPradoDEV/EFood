@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Prato } from "../../models/Prato";
+import type { Prato } from "../../pages/Home";
 
 export type DeliveryData = {
   recebedor: string;

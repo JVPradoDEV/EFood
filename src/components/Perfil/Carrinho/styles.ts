@@ -1,19 +1,44 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { cores } from "../../../styles/cores";
+import { fadeIn, fadeOut, slideIn, slideOut } from "../../../styles/animations";
 
-export const CartBG = styled.div`
+type AnimationProps = {
+  $isClosing: boolean;
+};
+
+export const CartBG = styled.div<AnimationProps>`
   position: fixed;
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: end;
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.8);
   height: 100%;
   width: 100%;
-  justify-items: end;
+  animation: ${(props) =>
+    props.$isClosing
+      ? css`
+          ${fadeOut} 0.4s ease forwards
+        `
+      : css`
+          ${fadeIn} 0.4s ease forwards
+        `};
 `;
 
-export const CartDiv = styled.div`
+export const CartDiv = styled.div<AnimationProps>`
   background-color: ${cores.vermelho};
   width: 360px;
   height: 100%;
+
+  animation: ${(props) =>
+    props.$isClosing
+      ? css`
+          ${slideOut} 0.4s ease-in forwards
+        `
+      : css`
+          ${slideIn} 0.4s ease-out forwards
+        `};
 `;
 
 export const CartUl = styled.ul`
@@ -58,6 +83,6 @@ export const CheckoutBTN = styled.button`
 export const EmptyText = styled.p`
   margin-left: 8px;
   font-size: 14px;
-  font-weight: regular;
+  font-weight: normal;
   color: ${cores.bege};
 `;

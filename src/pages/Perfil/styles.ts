@@ -78,3 +78,11 @@ export const ItemLi = styled.li`
     font-size: 14px;
   }
 `;
+
+export const Loading = styled.h1`
+  font-size: 20px;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  margin-top: 80px;
+`;

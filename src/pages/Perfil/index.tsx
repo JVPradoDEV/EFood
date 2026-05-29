@@ -1,82 +1,64 @@
-import { useState } from "react";
-import { Banner, ItemLi, ItensLoja } from "./styles";
-import { PageContainer } from "../../styles/main";
-import macarrao from "../../assets/macarrao.png";
-import pizza from "../../assets/pizza.png";
-import sushi from "../../assets/sushi.png";
-import Header from "../../components/Perfil/Header";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import type { Prato, Restaurante } from "../Home";
+import Header from "../../components/Perfil/Header";
+import { Banner, ItemLi, ItensLoja, Loading } from "./styles";
+import { PageContainer } from "../../styles/main";
 import { Modal } from "../../components/Perfil/Modal";
-import type { Prato } from "../../models/Prato";
 import { Carrinho } from "../../components/Perfil/Carrinho";
 
-const dadosRestaurantes = {
-  italiana: {
-    type: "Italiano",
-    title: "La Dolce Vita Trattoria",
-    bannerImg: macarrao,
-    itens: Array.from({ length: 6 }, (_, index) => ({
-      id: index,
-      name: "Pizza Marguerita",
-      description:
-        "A clássica Marguerita: molho de tomate suculento, mussarela derretida, manjericão fresco e um toque de azeite. Sabor e simplicidade!",
-      image: pizza,
-      descriptionPlus:
-        "A pizza Margherita é uma pizza clássica da culinária italiana, reconhecida por sua simplicidade e sabor inigualável. Ela é feita com uma base de massa fina e crocante, coberta com molho de tomate fresco, queijo mussarela de alta qualidade, manjericão fresco e azeite de oliva extra-virgem. A combinação de sabores é perfeita, com o molho de tomate suculento e ligeiramente ácido, o queijo derretido e cremoso e as folhas de manjericão frescas, que adicionam um toque de sabor herbáceo. É uma pizza simples, mas deliciosa, que agrada a todos os paladares e é uma ótima opção para qualquer ocasião.",
-      price: 60.9,
-    })),
-  },
-  japonesa: {
-    type: "Japonesa",
-    title: "Hioki Sushi",
-    bannerImg: sushi,
-
-    itens: Array.from({ length: 6 }, (_, index) => ({
-      id: index,
-      name: "Combo Sushi",
-      description:
-        "Sushis frescos, sashimis deliciosos e pratos quentes irresistíveis para sua refeição.",
-      descriptionPlus:
-        "Neste combinado, temos cortes precisos e delicados de sashimi, pensados para derreter na boca e evidenciar a pureza e a textura natural dos pescados frescos do dia. Ao centro, os niguiris repousam sobre uma base de shari – o arroz temperado na medida exata –, criando o equilíbrio perfeito entre a acidez suave do vinagre e a untuosidade do peixe.",
-      image: sushi,
-      price: 30.9,
-    })),
-  },
-};
-
-type PerfilParams = {
-  tipo: "italiana" | "japonesa";
-};
+// export type Props = {
+//   restauranteInfos: Restaurante;
+//   cardapioItens: Restaurante[];
+// };
 
 export function Perfil() {
-  const { tipo } = useParams<PerfilParams>();
+  const { id } = useParams<{ id: string }>();
+  const [restaurante, setRestaurante] = useState<Restaurante>();
+
+  useEffect(() => {
+    fetch(`https://api-ebac.vercel.app/api/efood/restaurantes/${id}`)
+      .then((res) => res.json())
+      .then((res) => setRestaurante(res));
+  }, [id]);
 
   const [selectedItem, setSelectedItem] = useState<Prato | null>(null);
 
-  if (!tipo || !dadosRestaurantes[tipo]) {
-    return <h2>Restaurante não encontrado!</h2>;
+  if (!restaurante) {
+    return (
+      <>
+        <div className="container">
+          <Loading>Carregando. . .</Loading>
+        </div>
+      </>
+    );
   }
 
-  const restaurante = dadosRestaurantes[tipo];
+  const getDescricao = (texto: string) => {
+    if (texto && texto.length > 115) {
+      return texto.slice(0, 107) + ". . .";
+    }
+    return texto;
+  };
 
   return (
     <PageContainer>
       <Carrinho />
       <Header />
-      <Banner $bgImage={restaurante.bannerImg}>
+      <Banner $bgImage={restaurante?.capa}>
         <div className="containerPerfil">
-          <h2>{restaurante.type}</h2>
-          <h3>{restaurante.title}</h3>
+          <h2>{restaurante?.tipo}</h2>
+          <h3>{restaurante?.titulo}</h3>
         </div>
       </Banner>
       <div className="containerPerfil">
         <ItensLoja>
-          {restaurante.itens.map((item) => (
-            <ItemLi key={item.id}>
-              <img src={item.image} />
-              <h3>{item.name}</h3>
-              <p>{item.description}</p>
-              <button onClick={() => setSelectedItem(item)}>
+          {restaurante.cardapio.map((prato) => (
+            <ItemLi key={prato.id}>
+              <img src={prato.foto} />
+              <h3>{prato.nome}</h3>
+              <p>{getDescricao(prato.descricao)}</p>
+              <button onClick={() => setSelectedItem(prato)}>
                 Mais Detalhes
               </button>
             </ItemLi>

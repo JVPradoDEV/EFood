@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { cores } from "../../styles/cores";
 
 type BannerProps = {
-  $bgImage: string;
+  $bgImage: string | undefined;
 };
 
 export const Banner = styled.div<BannerProps>`

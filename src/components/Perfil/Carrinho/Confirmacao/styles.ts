@@ -10,3 +10,68 @@ export const PaymentForm = styled(DeliveryForm)`
     font-weight: 400;
   }
 `;
+
+export const PaymentInfos = styled.div`
+  border-top: 2px solid ${cores.bege};
+  display: grid;
+  color: ${cores.begeClaro};
+  margin-left: 8px;
+  margin-right: 8px;
+
+  h2,
+  p {
+    color: ${cores.bege};
+  }
+
+  p {
+    margin-bottom: 2px;
+  }
+
+  h2 {
+    margin-top: 32px;
+    padding: 8px 0px;
+  }
+
+  .products {
+    div {
+      display: flex;
+      justify-content: space-between;
+      border-top: 2px solid ${cores.bege};
+
+      p,
+      span {
+        color: ${cores.bege};
+      }
+
+      span {
+        font-weight: bold;
+      }
+    }
+
+    p {
+      color: ${cores.bege};
+    }
+  }
+  .delivery {
+    p,
+    span {
+      color: ${cores.bege};
+    }
+
+    span {
+      color: ${cores.bege};
+      font-weight: bold;
+    }
+  }
+
+  .card {
+    p,
+    span {
+      color: ${cores.bege};
+    }
+
+    span {
+      font-weight: bold;
+    }
+  }
+`;

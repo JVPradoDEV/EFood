@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { AddCart, Close, ModalBG, ModalDiv } from "./styles";
 import { add } from "../../../store/reducers/cartSlice";
-import type { Prato } from "../../../pages/Home";
 
 type ModalProps = {
   prato: Prato;

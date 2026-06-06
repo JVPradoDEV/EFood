@@ -1,106 +1,146 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+
+import { useCustomMasks } from "../../../../utils/masks";
 import { Pagamento } from "../Pagamento";
 import { setDeliveryData } from "../../../../store/reducers/cartSlice";
 import { CheckoutBTN } from "../styles";
+
 import {
   DeliveryForm,
   DeliveryInput,
   DeliveryLabel,
   InputGroup,
 } from "./styles";
-import { useDispatch } from "react-redux";
 
 type EntregaProps = {
   setDeliveryForm: (value: boolean) => void;
   totalValue: number;
+  onFinished: (finished: boolean) => void;
 };
 
-export function Entrega({ setDeliveryForm, totalValue }: EntregaProps) {
+export function Entrega({
+  setDeliveryForm,
+  totalValue,
+  onFinished,
+}: EntregaProps) {
   const dispatch = useDispatch();
-  const [payamentForm, setPayamentForm] = useState(false);
-  const [cep, setCep] = useState("");
-  const [numero, setNumero] = useState("");
+  const [paymentForm, setPaymentForm] = useState(false);
 
-  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let valor = e.target.value;
-    valor = valor.replace(/\D/g, "");
-    valor = valor.replace(/^(\d{5})(\d)/, "$1-$2");
-    setCep(valor);
-  };
+  const { cepMaskRef, numeroMaskRef } = useCustomMasks();
 
-  const handleNumeroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let valor = e.target.value;
-    valor = valor.replace(/\D/g, "");
-    setNumero(valor);
-  };
+  const validacaoEntrega = Yup.object({
+    receiver: Yup.string().required("O campo é obrigatório"),
+    description: Yup.string().required("O campo é obrigatório"),
+    city: Yup.string().required("O campo é obrigatório"),
+    zipCode: Yup.string()
+      .required("O campo é obrigatório")
+      .min(9, "CEP inválido"),
+    number: Yup.string().required("O campo é obrigatório"),
+    complement: Yup.string(),
+  });
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-
-    const dadosDaEntrega = {
-      recebedor: formData.get("recebedor") as string,
-      endereco: formData.get("endereco") as string,
-      cidade: formData.get("cidade") as string,
-      cep: cep,
-      numero: numero,
-      complemento: formData.get("complemento") as string,
-    };
-
-    dispatch(setDeliveryData(dadosDaEntrega));
-
-    setPayamentForm(true);
-    console.log("Formulario Enviado!");
-    console.log(dadosDaEntrega);
-  };
+  const form = useFormik({
+    initialValues: {
+      receiver: "",
+      description: "",
+      city: "",
+      zipCode: "",
+      number: "",
+      complement: "",
+    },
+    validationSchema: validacaoEntrega,
+    onSubmit: (values) => {
+      dispatch(setDeliveryData(values));
+      setPaymentForm(true);
+    },
+  });
 
   return (
     <>
-      {!payamentForm ? (
+      {!paymentForm ? (
         <>
-          <DeliveryForm onSubmit={handleSubmit}>
+          <DeliveryForm onSubmit={form.handleSubmit}>
             <h2>Entrega</h2>
             <DeliveryLabel>Quem irá receber</DeliveryLabel>
-            <DeliveryInput name="recebedor" required type="text" />
+            <DeliveryInput
+              id="receiver"
+              name="receiver"
+              type="text"
+              value={form.values.receiver}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+            />
             <DeliveryLabel>Endereço</DeliveryLabel>
-            <DeliveryInput name="endereco" required type="text" />
+            <DeliveryInput
+              id="description"
+              name="description"
+              type="text"
+              value={form.values.description}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+            />
             <DeliveryLabel>Cidade</DeliveryLabel>
-            <DeliveryInput name="cidade" required type="text" />
+            <DeliveryInput
+              id="city"
+              name="city"
+              type="text"
+              value={form.values.city}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+            />
             <InputGroup className="expires">
               <div>
                 <DeliveryLabel>CEP</DeliveryLabel>
                 <DeliveryInput
-                  required
-                  maxLength={8}
+                  id="zipCode"
+                  name="zipCode"
                   className="half"
                   type="text"
-                  value={cep}
-                  onChange={handleCepChange}
+                  value={form.values.zipCode}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  ref={cepMaskRef}
                 />
               </div>
               <div>
                 <DeliveryLabel>Número</DeliveryLabel>
                 <DeliveryInput
-                  required
-                  maxLength={15}
-                  className="half"
+                  id="number"
+                  name="number"
                   type="text"
-                  value={numero}
-                  onChange={handleNumeroChange}
+                  value={form.values.number}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  ref={numeroMaskRef}
                 />
               </div>
             </InputGroup>
             <DeliveryLabel>Complemento (opcional)</DeliveryLabel>
-            <DeliveryInput name="complemento" type="text" />
-            <CheckoutBTN type="submit">Continuar para o pagamento</CheckoutBTN>
-            <CheckoutBTN onClick={() => setDeliveryForm(false)}>
+            <DeliveryInput
+              id="complement"
+              name="complement"
+              type="text"
+              value={form.values.complement}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+            />
+            <CheckoutBTN type="submit" disabled={!form.isValid}>
+              Continuar para o pagamento
+            </CheckoutBTN>
+            <CheckoutBTN type="button" onClick={() => setDeliveryForm(false)}>
               Voltar para o carrinho
             </CheckoutBTN>
           </DeliveryForm>
         </>
       ) : (
-        <Pagamento setPayementForm={setPayamentForm} totalValue={totalValue} />
+        <Pagamento
+          setPayementForm={setPaymentForm}
+          totalValue={totalValue}
+          onFinished={onFinished}
+        />
       )}
     </>
   );

@@ -12,6 +12,17 @@ export const DeliveryForm = styled.form`
     font-size: 16px;
     margin-bottom: 16px;
   }
+
+  input {
+    background-color: ${cores.bege};
+    color: ${cores.cinza};
+    font-weight: bold;
+    border: none;
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    outline: none;
+  }
 `;
 
 export const DeliveryLabel = styled.label`
@@ -22,16 +33,7 @@ export const DeliveryLabel = styled.label`
   margin-bottom: 8px;
 `;
 
-export const DeliveryInput = styled.input`
-  background-color: ${cores.bege};
-  color: ${cores.cinza};
-  font-weight: bold;
-  border: none;
-  width: 100%;
-  height: 32px;
-  padding: 0 8px;
-  outline: none;
-`;
+export const DeliveryInput = styled.input``;
 
 export const InputGroup = styled.div`
   display: grid;

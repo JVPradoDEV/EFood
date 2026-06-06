@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Prato } from "../../pages/Home";
 
 export type DeliveryData = {
-  recebedor: string;
-  endereco: string;
-  cidade: string;
-  cep: string;
-  numero: string;
-  complemento?: string;
+  receiver: string;
+  description: string;
+  city: string;
+  zipCode: string;
+  number: string;
+  complement?: string;
 };
 
 type CartState = {

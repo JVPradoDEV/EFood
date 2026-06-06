@@ -17,6 +17,7 @@ export function Carrinho() {
   const dispatch = useDispatch();
   const [deliveryForm, setDeliveryForm] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
   const itemsOnCart = useSelector((state: RootState) => state.cart.items);
   const isOpen = useSelector((state: RootState) => state.cart.isOpen);
@@ -27,16 +28,6 @@ export function Carrinho() {
     return acumulador + itemAtual.preco;
   }, 0);
 
-  const closeCart = () => {
-    setIsClosing(true);
-
-    setTimeout(() => {
-      setDeliveryForm(false);
-      dispatch(close());
-      setIsClosing(false);
-    }, 400);
-  };
-
   const handleContinuarEntrega = () => {
     if (itemsOnCart.length === 0) {
       alert("O carrinho está vázio!");
@@ -45,9 +36,20 @@ export function Carrinho() {
     setDeliveryForm(true);
   };
 
+  const handleOverlayClick = () => {
+    if (isFinished) return;
+
+    setIsClosing(true);
+    setTimeout(() => {
+      setDeliveryForm(false);
+      dispatch(close());
+      setIsClosing(false);
+    }, 400);
+  };
+
   return (
     <>
-      <CartBG onClick={closeCart} $isClosing={isClosing}>
+      <CartBG onClick={handleOverlayClick} $isClosing={isClosing}>
         <CartDiv onClick={(e) => e.stopPropagation()} $isClosing={isClosing}>
           {!deliveryForm ? (
             <>
@@ -74,6 +76,7 @@ export function Carrinho() {
             <Entrega
               setDeliveryForm={setDeliveryForm}
               totalValue={totalValue}
+              onFinished={setIsFinished}
             />
           )}
         </CartDiv>

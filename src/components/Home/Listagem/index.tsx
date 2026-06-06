@@ -1,5 +1,4 @@
 import Card from "../../../containers/Card";
-import type { Restaurante } from "../../../pages/Home";
 import { ListUl } from "./styles";
 
 export type Props = {

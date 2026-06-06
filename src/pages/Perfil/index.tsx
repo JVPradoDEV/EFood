@@ -1,37 +1,26 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import type { Prato, Restaurante } from "../Home";
 import Header from "../../components/Perfil/Header";
-import { Banner, ItemLi, ItensLoja, Loading } from "./styles";
 import { PageContainer } from "../../styles/main";
 import { Modal } from "../../components/Perfil/Modal";
 import { Carrinho } from "../../components/Perfil/Carrinho";
+import { Banner, ItemLi, ItensLoja } from "./styles";
+import { useGetRestaurantQuery } from "../../services/api";
+import { Loading } from "../../components/Loading";
 
-// export type Props = {
-//   restauranteInfos: Restaurante;
-//   cardapioItens: Restaurante[];
-// };
+type ProductParams = {
+  id: string;
+};
 
 export function Perfil() {
-  const { id } = useParams<{ id: string }>();
-  const [restaurante, setRestaurante] = useState<Restaurante>();
+  const { id } = useParams() as ProductParams;
 
-  useEffect(() => {
-    fetch(`https://api-ebac.vercel.app/api/efood/restaurantes/${id}`)
-      .then((res) => res.json())
-      .then((res) => setRestaurante(res));
-  }, [id]);
+  const { data: restaurante, isLoading } = useGetRestaurantQuery(id);
 
   const [selectedItem, setSelectedItem] = useState<Prato | null>(null);
 
-  if (!restaurante) {
-    return (
-      <>
-        <div className="container">
-          <Loading>Carregando. . .</Loading>
-        </div>
-      </>
-    );
+  if (isLoading) {
+    return <Loading />;
   }
 
   const getDescricao = (texto: string) => {
@@ -53,7 +42,7 @@ export function Perfil() {
       </Banner>
       <div className="containerPerfil">
         <ItensLoja>
-          {restaurante.cardapio.map((prato) => (
+          {restaurante!.cardapio.map((prato) => (
             <ItemLi key={prato.id}>
               <img src={prato.foto} />
               <h3>{prato.nome}</h3>

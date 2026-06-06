@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { remove } from "../../store/reducers/cartSlice";
-import type { Prato } from "../../pages/Home";
 import lixeira from "../../assets/lixeira-de-reciclagem.png";
 import { CartLi, DelBtn } from "./styles";
 

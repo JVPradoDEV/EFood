@@ -21,13 +21,19 @@ export const PaymentInfos = styled.div`
   h2,
   p {
     color: ${cores.bege};
+    line-height: 22px;
+    font-weight: 400;
   }
 
   p {
     margin-bottom: 2px;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
   }
 
   h2 {
+    font-size: 16px;
     margin-top: 32px;
     padding: 8px 0px;
   }
@@ -41,6 +47,9 @@ export const PaymentInfos = styled.div`
       p,
       span {
         color: ${cores.bege};
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 400;
       }
 
       span {
@@ -50,6 +59,9 @@ export const PaymentInfos = styled.div`
 
     p {
       color: ${cores.bege};
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 400;
     }
   }
   .delivery {

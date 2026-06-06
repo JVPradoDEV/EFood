@@ -1,6 +1,7 @@
 import { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
 
 import {
   InputGroup,
@@ -12,7 +13,6 @@ import { Confirmacao } from "../Confirmacao";
 
 import { CheckoutBTN } from "../styles";
 import { usePurchaseMutation } from "../../../../services/api";
-import { useSelector } from "react-redux";
 import type { RootState } from "../../../../store/store";
 import { useCustomMasks } from "../../../../utils/masks";
 
